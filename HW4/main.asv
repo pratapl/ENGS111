@@ -1,0 +1,35 @@
+%Pratap Luitel
+%ENGS 111
+%HW 4
+
+
+im1 = imread('rice.png');
+[i2,m2] = imread('son1-1.gif');
+imIn3 = imread('cameraman.tif');
+se = strel('ball',5,5);
+SE = se.getnhood;
+imshow(im2double(imIn3))
+
+
+%convert to type double
+imIn1 = im2double(im1);
+imIn2 = ind2gray(i2,m2);
+imIn2 = im2double(imIn2);
+
+imageSequence1 = zeros(size(imIn1,1),size(imIn1,2),1,8);
+
+for i = 1:4
+    n = [7 11 13 15];
+
+    startX = floor(n(i)/2);
+    x = repmat(-startX:startX,[n(i) 1]);
+    y = repmat([-startX:startX]',[1 n(i)]);
+    r = sqrt(x.^2 + y.^2);
+
+    SE = zeros(n(i),n(i));
+    SE(r <= startX) = 1;
+
+    imOut = erodeDilate(imIn1,SE,0);
+    imageSequence1(:,:,1,i) = imOut;
+    imageSequence1(:,:,1,i+4) = 1 -erodeDilate(imIn1,SE,1);
+end
